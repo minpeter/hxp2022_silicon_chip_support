@@ -1,8 +1,8 @@
 # see docker-compose.yml
 
-FROM minpeter/ynetd:latest
+FROM ubuntu:22.04
 
-RUN apt-get update && apt-get install -y --no-install-recommends xorg
+RUN apt-get update && apt-get install -y --no-install-recommends xorg socat
 
 RUN rm -rf /var/lib/apt/lists/ && rm -rf /usr/lib/systemd/
 
@@ -18,7 +18,6 @@ COPY run.sh /home/ctf/run.sh
 RUN chmod 555 /home/ctf && \
     chown -R root:root /home/ctf && \
     chmod -R 000 /home/ctf/* && \
-    chmod 500 /sbin/ynetd && \
     chmod -R 555 /home/ctf/gfx_libs/ && \
     chmod 555 /home/ctf/run.sh && \
     chmod 555 /home/ctf/hxp_gpu && \
@@ -30,5 +29,5 @@ RUN ! find / -writable -or -user $(id -un) -or -group $(id -Gn|sed -e 's/ / -or 
 USER root
 EXPOSE 1024
 
-CMD ynetd -pow 28 -p 1024 -lt 320 -t 40 -lm 536870912 /home/ctf/run.sh
+CMD socat TCP-LISTEN:1024,reuseaddr,fork EXEC:"./home/ctf/run.sh"
 

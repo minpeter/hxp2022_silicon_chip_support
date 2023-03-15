@@ -1,6 +1,6 @@
 # see docker-compose.yml
 
-FROM minpeter/ynetd:latest
+FROM uubntu:22.04
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -23,7 +23,6 @@ RUN cd /home/ctf/ && \
 RUN chmod 555 /home/ctf && \
     chown -R root:root /home/ctf && \
     chmod -R 000 /home/ctf/* && \
-    chmod 500 /sbin/ynetd && \
     chmod 004 /home/ctf/initramfs.cpio && \
     chmod 004 /home/ctf/bzImage && \
     chmod 005 /home/ctf/run.sh
@@ -35,5 +34,9 @@ USER root
 
 WORKDIR /home/ctf
 EXPOSE 1024
+# CMD while true; do sleep 1m; find /tmp -name 'tmp.*' -mmin '+15' -delete; done & \
+#     ynetd -pow 28 -t 600 -lt 300 -lm -1 /home/ctf/run.sh
+
 CMD while true; do sleep 1m; find /tmp -name 'tmp.*' -mmin '+15' -delete; done & \
-    ynetd -pow 28 -t 600 -lt 300 -lm -1 /home/ctf/run.sh
+    CMD socat TCP-LISTEN:1024,reuseaddr,fork EXEC:"/home/ctf/run.sh"
+

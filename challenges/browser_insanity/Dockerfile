@@ -1,6 +1,6 @@
 # see docker-compose.yml
 
-FROM minpeter/ynetd:latest
+FROM ubuntu:22.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 procps qemu-system-x86 \
@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN useradd --create-home --shell /bin/bash ctf
 WORKDIR /home/ctf
 
-COPY enter_challenge.py run_vm.sh kolibri.img ynetd /home/ctf/
+COPY enter_challenge.py run_vm.sh kolibri.img /home/ctf/
 ADD images /tmp/
 
 RUN if [ -f /tmp/flag_real.img ] ; then \
@@ -23,7 +23,6 @@ RUN if [ -f /tmp/flag_real.img ] ; then \
 RUN chmod 555 /home/ctf && \
     chown -R root:root /home/ctf && \
     chmod -R 000 /home/ctf/* && \
-    chmod 500 /sbin/ynetd && \
     chmod 555 /home/ctf/enter_challenge.py && \
     chmod 555 /home/ctf/run_vm.sh && \
     chmod 444 /home/ctf/kolibri.img && \
@@ -36,4 +35,4 @@ USER root
 
 EXPOSE 1024
 
-CMD ynetd -pow 28 -t 120 -lt 150 -lm -1 /home/ctf/enter_challenge.py
+CMD socat TCP-LISTEN:1024,reuseaddr,fork EXEC:"/home/ctf/enter_challenge.py"

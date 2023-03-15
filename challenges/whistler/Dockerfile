@@ -1,12 +1,12 @@
 # see docker-compose.yml
 
-FROM minpeter/ynetd:latest
+FROM ubuntu:22.04
 
 USER root
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    python3 python3-pip \
+    python3 python3-pip socat \
     && rm -rf /var/lib/apt/lists/
 RUN pip3 install pycryptodome
 
@@ -28,8 +28,7 @@ COPY vuln.py flag.txt /home/ctf/
 # sane defaults
 RUN chmod 555 /home/ctf && \
     chown -R root:root /home/ctf && \
-    chmod -R 000 /home/ctf/* && \
-    chmod 500 /sbin/ynetd
+    chmod -R 000 /home/ctf/*
 
 RUN chmod 555 vuln.py && \
     chmod 444 flag.txt
@@ -41,5 +40,5 @@ RUN ! find / -writable -or -user $(id -un) -or -group $(id -Gn|sed -e 's/ / -or 
 USER root
 
 EXPOSE 1024
-CMD ynetd -lt 180 -t 1800 -lm 268435456 '/home/ctf/vuln.py'
+CMD socat TCP-LISTEN:1024,reuseaddr,fork EXEC:"python3 vuln.py"
 

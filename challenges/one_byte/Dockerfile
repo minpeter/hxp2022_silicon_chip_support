@@ -1,10 +1,10 @@
 # see docker-compose.yml
 
-FROM minpeter/ynetd:latest
+FROM ubuntu:22.04
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    qemu-system-x86 && \
+    qemu-system-x86 socat && \
     rm -rf /var/lib/apt/lists
 
 RUN useradd --create-home --shell /bin/bash ctf
@@ -14,7 +14,6 @@ COPY initramfs.cpio.gz run.sh vmlinuz flag.txt /home/ctf/
 RUN chmod 555 /home/ctf && \
     chown -R root:root /home/ctf && \
     chmod -R 000 /home/ctf/* && \
-    chmod 500 /sbin/ynetd && \
     chmod 004 /home/ctf/flag.txt && \
     chmod 004 /home/ctf/initramfs.cpio.gz && \
     chmod 004 /home/ctf/vmlinuz && \
@@ -27,4 +26,4 @@ USER root
 
 WORKDIR /home/ctf
 EXPOSE 1024
-CMD ynetd -pow 30 -t 600 -lt 60 -lm -1 /home/ctf/run.sh
+CMD socat TCP-LISTEN:1024,reuseaddr,fork EXEC:"/home/ctf/run.sh"

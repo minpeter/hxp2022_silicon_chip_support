@@ -1,12 +1,12 @@
 # see docker-compose.yml
 
-FROM minpeter/ynetd:latest
+FROM ubuntu:22.04
 
 USER root
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    make g++ libntl-dev \
+    make g++ libntl-dev socat \
     && rm -rf /var/lib/apt/lists/
 
 RUN useradd --create-home --shell /bin/bash ctf
@@ -21,8 +21,7 @@ USER root
 # sane defaults
 RUN chmod 555 /home/ctf && \
     chown -R root:root /home/ctf && \
-    chmod -R 000 /home/ctf/* && \
-    chmod 500 /sbin/ynetd
+    chmod -R 000 /home/ctf/*
 
 RUN chmod 555 vuln && \
     chmod 444 description && \
@@ -37,4 +36,4 @@ USER root
 
 # EXPOSE all your ports
 EXPOSE 1024
-CMD ynetd -u ctf -lt 30 -t 1800 ./vuln
+CMD socat TCP-LISTEN:1024,reuseaddr,fork EXEC:"./vuln"
