@@ -13,3 +13,8 @@ ynetd의 아키텍쳐 고정 이슈만 수정합니다.
 ## todo
 
 - [ ] arm64 support (m1 macbook support)
+  - [ ] cry
+  - [ ] msc
+  - [ ] pwn
+  - [ ] rev
+  - [ ] web
