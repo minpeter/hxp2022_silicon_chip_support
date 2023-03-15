@@ -32,7 +32,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./ynetd-0.1.2
-          file: .
           platforms: linux/arm64, linux/amd64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ynetd:latest
