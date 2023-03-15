@@ -31,8 +31,8 @@ jobs:
       - name: Build and push with Buildx
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: ynetd-0.1.2/Dockerfile
+          context: ./ynetd-0.1.2
+          file: .
           platforms: linux/arm64, linux/amd64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ynetd:latest
