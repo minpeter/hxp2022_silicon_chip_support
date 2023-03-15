@@ -1,15 +1,14 @@
 # see docker-compose.yml
 
-FROM ubuntu:22.10
+FROM minpeter/ynetd:latest
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        cpio qemu-system && \
+    cpio qemu-system && \
     rm -rf /var/lib/apt/lists
 
 RUN useradd --create-home --shell /bin/bash ctf
 
-COPY ynetd /sbin/
 COPY initramfs.cpio bzImage run.sh /home/ctf/
 
 # Add the flag to the initramfs

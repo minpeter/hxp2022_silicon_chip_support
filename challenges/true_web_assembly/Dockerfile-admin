@@ -1,6 +1,6 @@
 # see docker-compose.yml
 
-FROM debian:bullseye
+FROM minpeter/ynetd:latest
 
 USER root
 
@@ -15,7 +15,6 @@ RUN useradd --create-home --shell /bin/bash admin
 WORKDIR /home/admin
 
 COPY admin.py flag.txt /home/admin/
-COPY ynetd /sbin/
 
 USER root
 

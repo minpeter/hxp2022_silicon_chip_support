@@ -1,6 +1,6 @@
 # see docker-compose.yml
 
-FROM ubuntu:22.04
+FROM minpeter/ynetd:latest
 
 RUN apt-get update && apt-get install -y --no-install-recommends xorg
 
@@ -8,9 +8,6 @@ RUN rm -rf /var/lib/apt/lists/ && rm -rf /usr/lib/systemd/
 
 RUN useradd --create-home --shell /bin/bash ctf
 WORKDIR /home/ctf
-
-# Copy ynetd for serving connections
-COPY ynetd /sbin/
 
 # Copy challenge-specific files
 COPY libs /home/ctf/gfx_libs

@@ -1,6 +1,6 @@
 # see docker-compose.yml
 
-FROM debian:bullseye
+FROM minpeter/ynetd:latest
 
 USER root
 
@@ -11,8 +11,6 @@ RUN apt-get update && \
 
 RUN useradd --create-home --shell /bin/bash ctf
 WORKDIR /home/ctf
-
-COPY ynetd /sbin/
 
 COPY vuln.py flag.txt /home/ctf/
 

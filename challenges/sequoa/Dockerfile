@@ -1,18 +1,16 @@
 # see docker-compose.yml
 
-FROM debian:bullseye
+FROM minpeter/ynetd:latest
 
 USER root
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        make g++ libntl-dev \
+    make g++ libntl-dev \
     && rm -rf /var/lib/apt/lists/
 
 RUN useradd --create-home --shell /bin/bash ctf
 WORKDIR /home/ctf
-
-COPY ynetd /sbin/
 
 COPY Makefile vuln.cpp crypto_sign.tar.gz flag.txt /home/ctf/
 

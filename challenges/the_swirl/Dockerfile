@@ -1,19 +1,17 @@
 # see docker-compose.yml
 
-FROM debian:bullseye
+FROM minpeter/ynetd:latest
 
 USER root
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        python3 python3-pip \
+    python3 python3-pip \
     && rm -rf /var/lib/apt/lists/
 RUN pip3 install pycryptodome
 
 RUN useradd --create-home --shell /bin/bash ctf
 WORKDIR /home/ctf
-
-COPY ynetd /sbin/
 
 COPY vuln.py compute.so flag.txt /home/ctf/
 

@@ -1,15 +1,14 @@
 # see docker-compose.yml
 
-FROM debian:bullseye
+FROM minpeter/ynetd:latest
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        qemu-system-x86 && \
+    qemu-system-x86 && \
     rm -rf /var/lib/apt/lists
 
 RUN useradd --create-home --shell /bin/bash ctf
 
-COPY ynetd /sbin/
 COPY initramfs.cpio.gz run.sh vmlinuz flag.txt /home/ctf/
 
 RUN chmod 555 /home/ctf && \

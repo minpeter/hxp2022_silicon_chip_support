@@ -1,25 +1,23 @@
 # see docker-compose.yml
 
-FROM ubuntu:20.04
+FROM minpeter/ynetd:latest
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        python3 procps qemu-system-x86 \
- && rm -rf /var/lib/apt/lists/
+    python3 procps qemu-system-x86 \
+    && rm -rf /var/lib/apt/lists/
 
 RUN useradd --create-home --shell /bin/bash ctf
 WORKDIR /home/ctf
-
-COPY ynetd /sbin/
 
 COPY enter_challenge.py run_vm.sh kolibri.img ynetd /home/ctf/
 ADD images /tmp/
 
 RUN if [ -f /tmp/flag_real.img ] ; then \
-        echo '[+] running on server with real flag' && \
-        mv -v /tmp/flag_real.img /home/ctf/flag.img ; \
+    echo '[+] running on server with real flag' && \
+    mv -v /tmp/flag_real.img /home/ctf/flag.img ; \
     else \
-        echo '[+] running locally with fake flag' && \
-        mv -v /tmp/flag_fake.img /home/ctf/flag.img ; \
+    echo '[+] running locally with fake flag' && \
+    mv -v /tmp/flag_fake.img /home/ctf/flag.img ; \
     fi
 
 RUN chmod 555 /home/ctf && \
